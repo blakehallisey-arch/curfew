@@ -1,0 +1,60 @@
+$ curfew check --write config/.env.production
+DENY  [path]  rule: .env
+
+curfew: this run is not allowed to write config/.env.production. It matched the protected rule '.env'. Protected paths are secrets, live personal data, and the rules the run itself operates under — a process that can rewrite its own guardrails does not have guardrails, it has suggestions. This is a hard rule, not a preference. Record the item as blocked, say this is why, and move on.
+(exit 3)
+
+$ curfew check --bash "python3 - <<EOF ... open('.claude/settings.json','w') ... EOF"
+DENY  [path]  rule: .claude/
+
+curfew: that shell command names a protected path ('.claude/settings.json' matched rule '.claude/'). Writing through an interpreter, a heredoc, sed, tee or a redirect is the same act as writing through the editor, so shell commands naming these paths are denied outright rather than guessed about. Use the Read tool if you only need to look. Otherwise record the item as blocked.
+(exit 3)
+
+$ curfew check --bash "cat .env"
+ALLOW
+(exit 0)
+
+$ curfew check --bash "cat .env > /tmp/copy"
+DENY  [path]  rule: .env
+
+curfew: that shell command names a protected path ('.env' matched rule '.env'). Writing through an interpreter, a heredoc, sed, tee or a redirect is the same act as writing through the editor, so shell commands naming these paths are denied outright rather than guessed about. Use the Read tool if you only need to look. Otherwise record the item as blocked.
+(exit 3)
+
+$ curfew check --tool mcp__calendar__create_event
+DENY  [connector]  rule: mcp__calendar__create_event
+
+curfew: this run cannot call mcp__calendar__create_event. It is unattended, so it does not touch live connected services — mail, calendars, drives, scheduled jobs. Read-only connector tools can be added to connectors.allow in .curfew.json; anything that creates, sends or changes should not be. If the work genuinely needs this, stop and record the item as blocked so a human can do it with their eyes open.
+(exit 3)
+
+$ curfew check --day --bash "git push origin main"
+DENY  [merge]  rule: day_mode
+
+curfew: This is a daylight run. A human is at the desk right now, possibly in these same files. Every item ends at an OPEN PR: push the branch, open the PR, stop. Nothing merges to the default branch while somebody is working. Command was: git push origin main
+(exit 3)
+
+$ curfew check --day --bash "git push -u origin curfew/main-nav-fix"
+ALLOW
+(exit 0)
+
+$ CURFEW_PHASE=plan curfew check --phase plan --bash "bash build.sh"
+DENY  [phase]  rule: plan
+
+curfew: phase 'plan' allows read-only shell only. This is the PLAN phase. It reads, it decides, and it writes the plan file. That is all. If you found work worth doing, write it into the plan; the build phase does it next with its own budget. No interpreters, no redirects, no git, no package managers. Allowed starts: cat , head , tail , less , grep , rg , jq , wc , ls , stat .
+(exit 3)
+
+$ curfew tier public/index.html --kind typo --lines 2 --claimed 1
+tier 2 — stops at a pull request
+why: public/index.html matches never_tier1 rule '**/*.html'
+files: public/index.html
+lines changed: 2
+
+DISAGREEMENT: the run claimed tier 1, the policy says tier 2 — public/index.html matches never_tier1 rule '**/*.html'
+(exit 3)
+
+$ curfew tier src/util.py --kind typo --lines 3
+tier 1 — may auto-merge
+why: no protected path, and kind 'typo' is routine
+files: src/util.py
+lines changed: 3
+(exit 0)
+

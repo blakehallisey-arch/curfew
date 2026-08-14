@@ -1,0 +1,23 @@
+$ curfew report
+
+12 calls from 2026-08-14T10:09:50 to 2026-08-14T10:09:50
+7 allowed, 5 refused
+
+Refused, by reason:
+  shell      2
+  path       2
+  connector  1
+
+Refused, by rule:
+  pip3 install                 1
+  .env                         1
+  mcp__mail__create_draft      1
+  .claude/                     1
+  git stash                    1
+
+The last few refusals:
+  2026-08-14T10:09:50  Bash  pip3 install lxml
+  2026-08-14T10:09:50  Write  .env
+  2026-08-14T10:09:50  mcp__mail__create_draft  
+  2026-08-14T10:09:50  Bash  sed -i '' 's/x/y/' .claude/settings.json
+  2026-08-14T10:09:50  Bash  git stash

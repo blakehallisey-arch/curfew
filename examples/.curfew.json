@@ -1,0 +1,48 @@
+{
+  "//": "A real policy for a repo that runs an agent overnight. Everything here is ADDED to the shipped defaults.",
+
+  "arm_when_env": ["UNATTENDED_RUN", "NIGHTWATCH_RUN"],
+  "on_error": "deny",
+
+  "protect": [
+    "infra/terraform/**",
+    "db/migrations/**",
+    "**/*.p12",
+    "ops/deploy.sh"
+  ],
+
+  "shell_deny": [
+    "terraform apply",
+    "kubectl delete",
+    "aws s3 rm",
+    "dropdb"
+  ],
+
+  "connectors": {
+    "allow": [
+      "mcp__github__list_issues",
+      "mcp__github__get_pull_request"
+    ]
+  },
+
+  "phases": {
+    "plan": {
+      "may_write": [".nightwatch/plan.json"],
+      "shell": "read_only",
+      "reason": "The plan pass reads the repo and writes one file. It does not build."
+    }
+  },
+
+  "tiers": {
+    "never_tier1": [
+      "**/*.html",
+      "**/*.css",
+      "db/migrations/**",
+      "infra/**",
+      "package.json",
+      "pyproject.toml"
+    ],
+    "tier1_kinds": ["typo", "docs", "lint", "dead-code", "comment", "test-fix"],
+    "tier1_max_lines": 120
+  }
+}

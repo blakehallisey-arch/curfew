@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "enabled": true,
+
+  "arm_when_env": ["UNATTENDED_RUN", "CURFEW_RUN"],
+  "always_on": false,
+
+  "on_error": "deny",
+
+  "protect": [
+    ".env",
+    "**/*.pem",
+    "**/*.key",
+    "**/id_rsa*",
+    "credentials",
+    "token.json",
+    ".npmrc",
+    ".pypirc",
+    ".aws/",
+    ".ssh/",
+
+    ".curfew.json",
+    ".curfew/",
+
+    ".claude/",
+    "claude.md",
+    ".cursorrules",
+    ".github/workflows/",
+
+    ".git/hooks",
+    ".zshrc",
+    ".zshenv",
+    ".bashrc",
+    ".bash_profile",
+    "launchagents",
+    "crontab"
+  ],
+
+  "shell_deny": [
+    "rm -rf",
+    "rm -r ",
+    "rm -f ",
+    "git push --force",
+    "git push -f",
+    "git reset --hard",
+    "git clean",
+    "git checkout -- ",
+    "git checkout .",
+    "git restore",
+    "git stash",
+    "gh pr merge --admin",
+    "npm install",
+    "npm i ",
+    "npm ci",
+    "npx ",
+    "yarn add",
+    "yarn install",
+    "pnpm add",
+    "pnpm install",
+    "pip install",
+    "pip3 install",
+    "uv pip",
+    "brew install",
+    "gem install",
+    "cargo install",
+    "go install",
+    "shutdown",
+    "diskutil",
+    "mkfs",
+    "> /dev/",
+    "mail -s",
+    "sendmail"
+  ],
+
+  "read_only_programs": [
+    "cat ", "head ", "tail ", "less ", "grep ", "rg ", "jq ", "wc ", "ls ",
+    "stat ", "file ", "diff ", "md5 ", "shasum ", "find ", "echo ", "pwd",
+    "date", "which", "tree ",
+    "git log", "git show", "git diff", "git status", "git blame",
+    "gh pr list", "gh pr view", "gh issue list", "gh run list"
+  ],
+
+  "chain_characters": [">", "|", ";", "&&", "||", "`", "$(", "\n"],
+
+  "connectors": {
+    "deny_prefixes": ["mcp__", "Cron"],
+    "allow": []
+  },
+
+  "phases": {
+    "plan": {
+      "may_write": ["**/plan.json", "**/PLAN.md"],
+      "shell": "read_only",
+      "reason": "This is the PLAN phase. It reads, it decides, and it writes the plan file. That is all. If you found work worth doing, write it into the plan; the build phase does it next with its own budget."
+    }
+  },
+
+  "day_mode": {
+    "env": "CURFEW_DAY",
+    "default_branch": "main",
+    "reason": "This is a daylight run. A human is at the desk right now, possibly in these same files. Every item ends at an OPEN PR: push the branch, open the PR, stop. Nothing merges to the default branch while somebody is working."
+  },
+
+  "tiers": {
+    "never_tier1": [
+      "**/*.html",
+      "**/*.css",
+      "**/migrations/**",
+      "**/schema.sql",
+      "package.json",
+      "pyproject.toml",
+      "Dockerfile",
+      "**/*.tf"
+    ],
+    "tier1_kinds": ["typo", "docs", "lint", "dead-code", "comment", "test-fix"]
+  },
+
+  "audit": {
+    "path": ".curfew/audit.jsonl",
+    "log_allows": true,
+    "max_bytes": 5000000
+  }
+}
