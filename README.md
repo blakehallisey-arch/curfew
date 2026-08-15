@@ -307,12 +307,12 @@ watching every step.
 | repo | one line |
 |---|---|
 | **curfew** | write-time policy — deny by rule, not by prompt |
-| **breaker** | stops a session that is spinning, spreading, or inventing work |
-| **shipgate** | will not let a merge through until the checks it needs have run |
-| **nightwatch** | the run rail — a queue, a budget lid, a window, an honest log |
-| **draftdiff** | learns your voice from the edits you make before you send |
-| **ledger** | gives stateless agents a memory of what you did with their advice |
+| [breaker](https://github.com/blakehallisey-arch/breaker) | stops a session that is spinning, spreading, or inventing work |
+| [shipgate](https://github.com/blakehallisey-arch/shipgate) | will not let a merge through until the checks it needs have run |
+| [nightwatch](https://github.com/blakehallisey-arch/nightwatch) | the run rail — a queue, a budget lid, a window, an honest log |
+| [draftdiff](https://github.com/blakehallisey-arch/draftdiff) | learns your voice from the edits you make before you send |
+| [ledger](https://github.com/blakehallisey-arch/ledger) | gives stateless agents a memory of what you did with their advice |
 
-curfew is open now. The other five open one at a time.
+All six are open.
 
 MIT.
