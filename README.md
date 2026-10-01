@@ -316,3 +316,7 @@ watching every step.
 All six are open.
 
 MIT.
+
+Built by Blake Hallisey. These six came out of one rail running overnight
+against a real repo. The longer story, and what each night cost, is at
+[how I use AI](https://blakehallisey.com/how-i-use-ai).
